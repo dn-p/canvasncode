@@ -6,6 +6,8 @@ import CalButton from "@/components/CalButton";
 import CustomProjectCard from "@/components/CustomProjectCard";
 import ServiceCard from "@/components/ServiceCard";
 import CheckoutModal, { CHECKOUT_PACKAGES } from "@/components/CheckoutModal";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 const TESTIMONIALS = [
   {
     name: 'Rini Kusuma',
@@ -467,6 +469,7 @@ export default function Home() {
   }
   return (
     <>
+    <Navbar />
     <main className="flex min-h-screen flex-col bg-[#0A0A0F]">
 
       {/* ============================================================ */}
@@ -981,6 +984,7 @@ export default function Home() {
       </section>
 
     </main>
+    <Footer />
 
     <CheckoutModal
       isOpen={!!checkoutPkg}
