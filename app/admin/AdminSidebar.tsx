@@ -4,9 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV = [
-    { href: "/admin", label: "Pesanan", icon: "📦" },
-    { href: "/admin/report", label: "Laporan", icon: "📊" },
-    { href: "/admin/tracking", label: "Tracking Project", icon: "🗂️" },
+    { href: "/admin", label: "Pesanan" },
+    { href: "/admin/report", label: "Laporan" },
+    { href: "/admin/tracking", label: "Tracking Project" },
 ];
 
 export default function AdminSidebar() {
@@ -28,13 +28,12 @@ export default function AdminSidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                            className={`flex items-center px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                                 isActive
                                     ? "bg-[#1A56FF] text-white"
                                     : "text-[#6B6B6B] hover:text-white hover:bg-[#1A1A22]"
                             }`}
                         >
-                            <span>{item.icon}</span>
                             {item.label}
                         </Link>
                     );
