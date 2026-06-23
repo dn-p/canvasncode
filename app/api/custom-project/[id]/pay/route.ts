@@ -3,12 +3,12 @@ import { PrismaClient } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 
 const prisma = new PrismaClient();
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     try {
         const { id } = await params;
         const formData = await request.formData();

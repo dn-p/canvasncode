@@ -5,12 +5,11 @@ import { createClient } from "@supabase/supabase-js";
 // Inisialisasi Prisma
 const prisma = new PrismaClient();
 
-// Inisialisasi Supabase Client untuk Storage
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function POST(request: Request) {
+    const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
     try {
         // 1. Tangkap data FormData dari Frontend
         const formData = await request.formData();
