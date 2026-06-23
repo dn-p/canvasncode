@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Rancangan tabel database untuk Checkout Manual
+enum OrderStatus {
+  PENDING
+  VERIFYING
+  COMPLETED
+  REJECTED
+}
+
+model DiscoveryCall {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  service   String?
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+enum CustomProjectStatus {
+  REQUESTED
+  QUOTED
+  VERIFYING
+  COMPLETED
+  REJECTED
+}
+
+model CustomProject {
+  id              String              @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  projectCategory String
+  projectName     String
+  description     String
+  totalAmount     Int?
+  status          CustomProjectStatus @default(REQUESTED)
+  receiptUrl      String?
+  createdAt       DateTime            @default(now())
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  customerName  String
+  customerEmail String
+  serviceName   String
+  totalAmount   Int
+  status        OrderStatus @default(PENDING)
+  receiptUrl    String?     
+  createdAt     DateTime    @default(now())
+}
