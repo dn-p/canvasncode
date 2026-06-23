@@ -68,6 +68,15 @@ type Order = {
     createdAt: Date;
 };
 
+type DiscoveryCall = {
+    id: string;
+    name: string;
+    email: string;
+    service: string | null;
+    message: string | null;
+    createdAt: Date;
+};
+
 type CustomProject = {
     id: string;
     customerName: string;
@@ -141,8 +150,8 @@ function QuoteForm({ project }: { project: CustomProject }) {
     );
 }
 
-export default function AdminTabs({ orders, customProjects }: { orders: Order[]; customProjects: CustomProject[] }) {
-    const [tab, setTab] = useState<"orders" | "custom">("orders");
+export default function AdminTabs({ orders, customProjects, discoveryCalls }: { orders: Order[]; customProjects: CustomProject[]; discoveryCalls: DiscoveryCall[] }) {
+    const [tab, setTab] = useState<"orders" | "custom" | "discovery">("orders");
 
     return (
         <>
@@ -158,6 +167,12 @@ export default function AdminTabs({ orders, customProjects }: { orders: Order[];
                     className={`px-5 py-2 rounded-xl text-sm font-semibold transition-colors ${tab === "custom" ? "bg-white text-[#0A0A0F]" : "text-[#6B6B6B] hover:text-white"}`}
                 >
                     Custom Projects ({customProjects.length})
+                </button>
+                <button
+                    onClick={() => setTab("discovery")}
+                    className={`px-5 py-2 rounded-xl text-sm font-semibold transition-colors ${tab === "discovery" ? "bg-white text-[#0A0A0F]" : "text-[#6B6B6B] hover:text-white"}`}
+                >
+                    Discovery Call ({discoveryCalls.length})
                 </button>
             </div>
 
@@ -251,6 +266,40 @@ export default function AdminTabs({ orders, customProjects }: { orders: Order[];
                                         </td>
                                         <td className="py-4 text-[#6B6B6B]">
                                             {new Date(p.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            )}
+            {tab === "discovery" && (
+                discoveryCalls.length === 0 ? (
+                    <p className="text-[#6B6B6B]">Belum ada pesan discovery call masuk.</p>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm border-collapse">
+                            <thead>
+                                <tr className="border-b border-[#1A1A22] text-[#6B6B6B] text-left">
+                                    <th className="py-3 pr-6">Nama</th>
+                                    <th className="py-3 pr-6">Email</th>
+                                    <th className="py-3 pr-6">Layanan</th>
+                                    <th className="py-3 pr-6">Pesan</th>
+                                    <th className="py-3">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {discoveryCalls.map((d) => (
+                                    <tr key={d.id} className="border-b border-[#1A1A22] align-top">
+                                        <td className="py-4 pr-6">{d.name}</td>
+                                        <td className="py-4 pr-6 text-[#6B6B6B]">{d.email}</td>
+                                        <td className="py-4 pr-6">{d.service ?? <span className="text-[#6B6B6B]">—</span>}</td>
+                                        <td className="py-4 pr-6 max-w-[300px]">
+                                            <p className="text-[#9A9A9A] text-xs line-clamp-3">{d.message ?? "—"}</p>
+                                        </td>
+                                        <td className="py-4 text-[#6B6B6B]">
+                                            {new Date(d.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
                                         </td>
                                     </tr>
                                 ))}
