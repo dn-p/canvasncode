@@ -12,6 +12,7 @@
     "@calcom/embed-react": "^1.5.3",
     "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.108.2",
+    "docx": "^9.7.1",
     "next": "16.2.7",
     "prisma": "^5.22.0",
     "react": "19.2.4",
