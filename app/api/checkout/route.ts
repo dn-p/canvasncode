@@ -6,10 +6,10 @@ import { createClient } from "@supabase/supabase-js";
 const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
     try {
         // 1. Tangkap data FormData dari Frontend
         const formData = await request.formData();
@@ -33,35 +33,34 @@ export async function POST(request: Request) {
             );
         }
 
-        // --- PERBAIKAN UTAMA DI SINI ---
-        // Ubah File object menjadi ArrayBuffer lalu menjadi Buffer agar bisa dibaca Supabase
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
+        let receiptUrl: string | null = null;
 
-        // 2. Siapkan Nama File Unik
-        const fileExt = file.name.split('.').pop() || 'jpg';
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        if (file && supabase) {
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
 
-        // 3. Upload Gambar ke Supabase Bucket 'receipts'
-        const { data: uploadData, error: uploadError } = await supabase.storage
-            .from("receipts")
-            .upload(fileName, buffer, { // Gunakan 'buffer', bukan 'file'
-                contentType: file.type || "image/jpeg",
-                upsert: false // Jangan timpa file dengan nama sama
-            });
+            const fileExt = file.name.split('.').pop() || 'jpg';
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
 
-        if (uploadError) {
-            console.error("Supabase Upload Error:", uploadError.message);
-            // Kita return pesan error asli dari Supabase agar kamu tahu masalahnya di frontend
-            return NextResponse.json({ error: `Upload gagal: ${uploadError.message}` }, { status: 500 });
+            const { error: uploadError } = await supabase.storage
+                .from("receipts")
+                .upload(fileName, buffer, {
+                    contentType: file.type || "image/jpeg",
+                    upsert: false
+                });
+
+            if (uploadError) {
+                console.error("Supabase Upload Error:", uploadError.message);
+            } else {
+                const { data: publicUrlData } = supabase.storage
+                    .from("receipts")
+                    .getPublicUrl(fileName);
+
+                receiptUrl = publicUrlData.publicUrl;
+            }
+        } else if (file) {
+            console.warn("Supabase storage is not configured; skipping receipt upload.");
         }
-
-        // 4. Dapatkan URL Publik
-        const { data: publicUrlData } = supabase.storage
-            .from("receipts")
-            .getPublicUrl(fileName);
-
-        const receiptUrl = publicUrlData.publicUrl;
 
         // 5. Simpan Data ke Database
         const order = await prisma.order.create({

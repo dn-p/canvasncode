@@ -5,10 +5,10 @@ import { createClient } from "@supabase/supabase-js";
 const prisma = new PrismaClient();
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
     try {
         const { id } = await params;
         const formData = await request.formData();
@@ -26,23 +26,29 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
             return NextResponse.json({ error: "Project belum mendapat penawaran harga" }, { status: 400 });
         }
 
-        const fileExt = file.name.split(".").pop();
-        const fileName = `custom-${id}-${Date.now()}.${fileExt}`;
+        let receiptUrl: string | null = null;
 
-        const { error: uploadError } = await supabase.storage
-            .from("receipts")
-            .upload(fileName, file, { contentType: file.type || "image/jpeg" });
+        if (supabase) {
+            const fileExt = file.name.split(".").pop();
+            const fileName = `custom-${id}-${Date.now()}.${fileExt}`;
 
-        if (uploadError) {
-            console.error("Supabase Upload Error:", uploadError);
-            return NextResponse.json({ error: "Gagal mengunggah bukti transfer" }, { status: 500 });
+            const { error: uploadError } = await supabase.storage
+                .from("receipts")
+                .upload(fileName, file, { contentType: file.type || "image/jpeg" });
+
+            if (uploadError) {
+                console.error("Supabase Upload Error:", uploadError);
+            } else {
+                const { data: publicUrlData } = supabase.storage.from("receipts").getPublicUrl(fileName);
+                receiptUrl = publicUrlData.publicUrl;
+            }
+        } else {
+            console.warn("Supabase storage is not configured; skipping receipt upload.");
         }
-
-        const { data: publicUrlData } = supabase.storage.from("receipts").getPublicUrl(fileName);
 
         const updated = await prisma.customProject.update({
             where: { id },
-            data: { receiptUrl: publicUrlData.publicUrl, status: "VERIFYING" },
+            data: { receiptUrl, status: "VERIFYING" },
         });
 
         return NextResponse.json({ success: true, project: updated });
