@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
     try {
@@ -35,7 +35,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
                 .upload(fileName, file, { contentType: file.type || "image/jpeg" });
 
             if (uploadError) {
-                console.error("Supabase Upload Error:", uploadError);
+                return NextResponse.json(
+                    { error: `Gagal upload bukti transfer: ${uploadError.message}` },
+                    { status: 500 }
+                );
             } else {
                 const { data: publicUrlData } = supabase.storage.from("receipts").getPublicUrl(fileName);
                 receiptUrl = publicUrlData.publicUrl;
