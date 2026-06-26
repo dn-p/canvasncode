@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
-
-const prisma = new PrismaClient();
 
 const STATUS_COLOR: Record<string, string> = {
     PENDING: "bg-yellow-100 text-yellow-800",

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { createClient } from "@supabase/supabase-js";
-
-const prisma = new PrismaClient();
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import KanbanBoard from "./KanbanBoard";
 
 export const dynamic = 'force-dynamic';
