@@ -58,8 +58,11 @@ export async function POST(request: Request) {
 
                 receiptUrl = publicUrlData.publicUrl;
             }
-        } else if (file) {
-            console.warn("Supabase storage is not configured; skipping receipt upload.");
+        } else {
+            return NextResponse.json(
+                { error: "Konfigurasi storage tidak ditemukan. Pastikan SUPABASE_SERVICE_ROLE_KEY sudah diset." },
+                { status: 500 }
+            );
         }
 
         // 5. Simpan Data ke Database
