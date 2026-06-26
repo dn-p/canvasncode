@@ -3,8 +3,6 @@ import KanbanBoard from "./KanbanBoard";
 
 export const dynamic = 'force-dynamic';
 
-const prisma = new PrismaClient();
-
 export default async function TrackingPage() {
     const projects = await prisma.customProject.findMany({
         orderBy: { createdAt: "desc" },
