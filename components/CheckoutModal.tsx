@@ -135,7 +135,7 @@ export default function CheckoutModal({ isOpen, selectedPackage, onClose }: Prop
                                 <div className="bg-[#F7F4EE] rounded-2xl px-4 py-3 flex justify-between items-center">
                                     <span className="text-[#6B6B6B] text-sm">Total pembayaran</span>
                                     <span className="text-[#0A0A0F] font-extrabold" style={{ fontFamily: "'Syne', sans-serif" }}>
-                                        {pkg.price}
+                                        Rp {pkg.amount.toLocaleString("id-ID")}
                                     </span>
                                 </div>
                             )}
