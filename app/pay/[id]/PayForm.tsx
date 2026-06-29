@@ -13,6 +13,11 @@ export default function PayForm({ projectId }: { projectId: string }) {
         e.preventDefault();
         if (!file) return;
 
+        if (file.size > 3 * 1024 * 1024) {
+            setError("Ukuran file maksimal 3MB");
+            return;
+        }
+
         setLoading(true);
         setError("");
 

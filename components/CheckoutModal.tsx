@@ -50,6 +50,11 @@ export default function CheckoutModal({ isOpen, selectedPackage, onClose }: Prop
         e.preventDefault();
         if (!pkg || !file) return;
 
+        if (file.size > 3 * 1024 * 1024) {
+            setError("Ukuran file maksimal 3MB");
+            return;
+        }
+
         setLoading(true);
         setError("");
 
