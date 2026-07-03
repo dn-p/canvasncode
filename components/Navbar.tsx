@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const NAV_LINKS = [
     { href: '#features', label: 'Layanan' },
@@ -20,9 +21,10 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link
                     href="/"
-                    className="text-base font-extrabold tracking-tighter text-[#F7F4EE]"
+                    className="flex items-center gap-2 text-base font-extrabold tracking-tighter text-[#F7F4EE]"
                     style={{ fontFamily: "'Syne', sans-serif" }}
                 >
+                    <Image src="/mark.svg" alt="Canvas & Code" width={24} height={24} />
                     CANVAS<span className="text-[#FF4D1C]">CODE</span>
                 </Link>
 
