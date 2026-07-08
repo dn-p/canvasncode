@@ -45,24 +45,24 @@ const TESTIMONIALS = [
     tag: 'Bundling Kreatif + Kasir',
     tagColor: '#1A56FF',
   },
-  {
-    name: 'Mega Lestari',
-    role: 'Founder',
-    business: 'Skincare by Mega',
-    avatar: 'ML',
-    text: 'Landing page yang dibuat sangat clean dan convert. Dalam 2 minggu pertama sejak launch, ada 47 lead masuk dari iklan Meta. Tim Canvas & Code juga sabar banget dalam proses revisi.',
-    tag: 'Identitas Visual',
-    tagColor: '#FF4D1C',
-  },
-  {
-    name: 'Budi Hartono',
-    role: 'Direktur',
-    business: 'CV Maju Jaya Teknik',
-    avatar: 'BH',
-    text: 'Perusahaan kami butuh sistem manajemen proyek internal yang bisa diakses tim di lapangan. Canvas & Code berhasil bangun solusi yang jauh melampaui ekspektasi kami, dengan harga yang sangat masuk akal.',
-    tag: 'Sistem Custom',
-    tagColor: '#9333EA',
-  },
+  // {
+  //   name: 'Mega Lestari',
+  //   role: 'Founder',
+  //   business: 'Skincare by Mega',
+  //   avatar: 'ML',
+  //   text: 'Landing page yang dibuat sangat clean dan convert. Dalam 2 minggu pertama sejak launch, ada 47 lead masuk dari iklan Meta. Tim Canvas & Code juga sabar banget dalam proses revisi.',
+  //   tag: 'Identitas Visual',
+  //   tagColor: '#FF4D1C',
+  // },
+  // {
+  //   name: 'Budi Hartono',
+  //   role: 'Direktur',
+  //   business: 'CV Maju Jaya Teknik',
+  //   avatar: 'BH',
+  //   text: 'Perusahaan kami butuh sistem manajemen proyek internal yang bisa diakses tim di lapangan. Canvas & Code berhasil bangun solusi yang jauh melampaui ekspektasi kami, dengan harga yang sangat masuk akal.',
+  //   tag: 'Sistem Custom',
+  //   tagColor: '#9333EA',
+  // },
 ];
 
 const CARD_W = 420;
@@ -643,7 +643,7 @@ export default function Home() {
             ].map((item) => (
               <div key={item.num} className="py-10 md:px-10 first:md:pl-0 last:md:pr-0">
                 <p
-                  className="text-[#1A1A22] text-6xl font-extrabold mb-6 select-none"
+                  className="text-[#E6E6EE] text-6xl font-extrabold mb-6 select-none"
                   style={{ fontFamily: "'Syne', sans-serif" }}
                 >
                   {item.num}
