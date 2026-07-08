@@ -556,9 +556,9 @@ export default function Home() {
           {/* Stats row */}
           <div className="mt-20 pt-10 border-t border-[#1A1A22] grid grid-cols-3 gap-6 max-w-lg">
             {[
-              { n: '50+', label: 'Klien UMKM' },
-              { n: '98%', label: 'Kepuasan Klien' },
-              { n: '3×', label: 'Rata-rata ROI' },
+              { n: '100%', label: 'Desain Kustom' },
+              { n: '24 Jam', label: 'Respon Dukungan' },
+              { n: '1-on-1', label: 'Fokus Pendampingan' },
             ].map((s) => (
               <div key={s.label}>
                 <p
