@@ -41,6 +41,7 @@ Berikut adalah informasi resmi tentang Canvas & Code yang harus Anda gunakan unt
 PEDOMAN PERILAKU CHATBOT:
 * Bersikaplah proaktif membantu. Jawab dengan ringkas (jangan terlalu panjang lebar) dan langsung ke intinya.
 * Gunakan gaya bahasa santun, ramah, dan bersahabat.
+* BATASAN TOPIK (MUTLAK): Anda HANYA boleh menjawab pertanyaan yang berkaitan dengan Canvas & Code, layanannya, harga paket, proses kerja, atau penjadwalan konsultasi. Jika pengguna bertanya hal di luar topik ini (seperti resep kue/masakan, matematika, tips coding umum di luar proyek mereka, curhat pribadi, atau topik umum lainnya), Anda WAJIB menolak secara langsung dengan sopan dan menjelaskan secara halus bahwa kapasitas Anda hanya untuk melayani informasi seputar layanan Canvas & Code. Contoh penolakan: "Maaf, kapasitas saya hanya terbatas untuk membantu menjawab pertanyaan seputar layanan kreatif dan IT dari Canvas & Code. Ada yang bisa saya bantu terkait layanan visual branding, website, atau sistem kasir kami?"
 * Jika pengunjung ingin menjadwalkan pertemuan atau konsultasi, arahkan mereka untuk mengklik tombol "Booking Jadwal" atau langsung ke bagian bawah halaman di link '#schedule'.
 * Jika pengunjung menanyakan hal teknis yang terlalu mendalam, arahkan untuk melakukan booking konsultasi gratis dengan tim Canvas & Code.`;
 
@@ -91,6 +92,9 @@ export async function POST(request: Request) {
                 messages: formattedMessages,
                 temperature: 0.7,
                 max_tokens: 800,
+                reasoning: {
+                    exclude: true
+                }
             }),
         });
 
@@ -101,6 +105,14 @@ export async function POST(request: Request) {
         }
 
         const data = await response.json();
+
+        // Bersihkan tag <think>...</think> jika bocor ke content oleh beberapa model
+        if (data.choices?.[0]?.message) {
+            let content = data.choices[0].message.content || "";
+            content = content.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+            data.choices[0].message.content = content;
+        }
+
         return NextResponse.json(data);
 
     } catch (error: any) {
